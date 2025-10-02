@@ -4,24 +4,26 @@ import com.hl.hungry_lion.cache.menuData;
 import com.hl.hungry_lion.scraper.diningScraper;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/menu")
+@RequestMapping("/menu")
 public class menuController {
 
-    @GetMapping
-    public String getMenuJson() {
-        return menuData.getLatestJson();
+    @GetMapping("/{meal}")
+    public String getMenuByMeal(@PathVariable String meal) {
+        return menuData.getJsonForMeal(meal);
     }
 
-    // Manual refresh endpoint (useful for testing)
     @PostMapping("/refresh")
     public String refreshMenu() {
         try {
-            String json = diningScraper.scrapeAllMeals();
-            menuData.setLatestJson(json);
+            Map<String, String> jsonByMeal = diningScraper.scrapeAllMeals();
+            menuData.setLatestJson(jsonByMeal);
             return "Menu refreshed successfully!";
         } catch (Exception e) {
             return "Error refreshing: " + e.getMessage();
         }
     }
 }
+

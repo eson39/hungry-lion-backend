@@ -7,9 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import com.hl.hungry_lion.scraper.mealsData.*;
 
@@ -18,8 +16,9 @@ public class diningScraper {
     private static final String BASE_URL = "https://liondine.com";
     private static final List<String> MEALS = Arrays.asList("breakfast", "lunch", "dinner", "latenight");
 
-    public static String scrapeAllMeals() throws Exception {
-        List<MealData> allMeals = new ArrayList<>();
+    public static Map<String, String> scrapeAllMeals() throws Exception {
+        Map<String, String> mealJsonMap = new HashMap<>();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
         for (String meal : MEALS) {
             Document doc = Jsoup.connect(BASE_URL + "/" + meal)
@@ -61,10 +60,11 @@ public class diningScraper {
                 halls.add(new DiningHall(hallName, hours, stations));
             }
 
-            allMeals.add(new MealData(meal, halls));
+            MealData mealData = new MealData(meal, halls);
+
+            mealJsonMap.put(meal.toLowerCase(), gson.toJson(mealData));
         }
 
-        Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
-        return gson.toJson(allMeals);
+        return mealJsonMap;
     }
 }
