@@ -1,4 +1,4 @@
-package scraper.mealsData;
+package com.hl.hungry_lion.scraper.mealsData;
 
 import java.util.List;
 
