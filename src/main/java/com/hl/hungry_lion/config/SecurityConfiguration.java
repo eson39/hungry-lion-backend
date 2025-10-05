@@ -22,7 +22,7 @@ public class SecurityConfiguration {
 
     public SecurityConfiguration(
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            AuthenticationProvider authenticationProvider //ignore Bean warning we will get to that
+            AuthenticationProvider authenticationProvider
     ) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
@@ -33,7 +33,7 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/api/auth/**").permitAll()
+                        .requestMatchers("/auth/**", "/api/auth/**", "/menu/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
